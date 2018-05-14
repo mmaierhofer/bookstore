@@ -2,8 +2,8 @@
 background-image: url('https://static1.squarespace.com/static/56159ae7e4b0f890085c2f66/t/56d60dc137013b3ec7bca4fd/1456868843175/15253-open-book-1920x1080-photography-wallpaper+%281%29.jpg?format=1500w');
 background-repeat: no-repeat; background-size: cover" class="ui grid">
     <div class="ui row centered grid">
-        <div class="ui huge header six wide column">HOME</div>
-        <bs-search (bookSelected)="bookSelected($event)" class="column"></bs-search>
+        <div class="ui huge header four wide column">HOME</div>
+        <bs-search (bookSelected)="bookSelected($event)" class="ui eight wide right aligned column"></bs-search>
     </div>
     <div class="ui row centered grid">
         <div class="ui four wide column vertically divided grid">
@@ -25,7 +25,7 @@ background-repeat: no-repeat; background-size: cover" class="ui grid">
             <i class="right arrow icon"></i>
         </div>
         </div>
-        <div class="ui row">
+        <div *ngIf="!authService.isAdmin()" class="ui row">
         <a routerLink="../cart" class="ui massive fluid white button">
             Zum Warenkorb
             <i class="right arrow icon"></i>
