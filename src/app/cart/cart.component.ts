@@ -38,7 +38,7 @@ order() {
     let body = '{' +
         '"user_id": ' + this.authService.getCurrentUserId() + ',' +
         '"brutto":' + this.price + ',' +
-        '"netto":' + (this.price * 0.1) + ',' +
+        '"netto":' + (this.price / 1.1) + ',' +
         '"books": [';
     for(let i = 0; i<this.books.length; i++) {
         body += '{"isbn":"'+this.books[i]['isbn']+'"},';
