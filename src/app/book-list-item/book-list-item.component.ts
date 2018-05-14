@@ -14,4 +14,8 @@ export class BookListItemComponent implements OnInit {
 
   ngOnInit() { }
 
+  getRating(num){
+    return Array(num);
+  }
+
 }

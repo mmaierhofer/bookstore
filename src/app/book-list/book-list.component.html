@@ -1,3 +1,4 @@
+<bs-search (bookSelected)="bookSelected($event)" class="column"></bs-search>
 <div class="ui middle aligned selection divided list">
   <a *ngFor="let book of books" class="item bs-book-list-item" [book]="book"
      [routerLink]="book.isbn"></a>

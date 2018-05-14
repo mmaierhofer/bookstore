@@ -5,6 +5,8 @@ import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/retry';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {Rating} from "./rating";
+
 
 @Injectable()
 export class BookStoreService {
@@ -21,6 +23,11 @@ export class BookStoreService {
     return this.http.get<Book>(`${this.api}/book/${isbn}`)
       .retry(3).catch(this.errorHandler);
   }
+
+    getSingleWithRating(isbn: string): Observable<Book> {
+        return this.http.get<Book>(`${this.api}/book/rating/${isbn}`)
+            .retry(3).catch(this.errorHandler);
+    }
 
   create(book: Book): Observable<any> {
     return this.http.post(`${this.api}/book`, book)
@@ -49,15 +56,30 @@ export class BookStoreService {
           .retry(3).catch(this.errorHandler);
   }
 
-  addToCart() : Observable<Book> {
-    let body = "{\n" +
-          "\t\"user_id\" : 1,\n" +
-          "\t\"orderItems\" : [{\n" +
-          "\t\t\"book\" : \"buch 2\",\n" +
-          "\t\t\"price\" : 82.99\n" +
-          "\t}]\n" +
-          "}";
-    return this.http.post(`${this.api}/order`, body)
+  order(body) {
+
+      return this.http.post(`${this.api}/order`, body)
+          .retry(3).catch(this.errorHandler);
+  }
+
+  getRatings(id) {
+    return this.http.get(`${this.api}/ratings/${id}`)
+        .retry(3).catch(this.errorHandler);
+  }
+
+  createRating(body) {
+    console.log(body);
+      return this.http.post(`${this.api}/rating`, body)
+          .retry(3).catch(this.errorHandler);
+  }
+
+  getCurrentUser(id) {
+    return this.http.get(`${this.api}/user/${id}`)
+        .retry(3).catch(this.errorHandler);
+  }
+
+  getOrders(id) {
+    return this.http.get(`${this.api}/orders/${id}`)
         .retry(3).catch(this.errorHandler);
   }
 

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {HomeComponent} from "../home/home.component";
-import {BookFormComponent} from "./book-form/book-form.component";
+import {BookFormComponent} from "./../book-form/book-form.component";
 
 const routes: Routes = [
     { path: 'admin', component: BookFormComponent},

@@ -13,6 +13,10 @@ export class AppComponent {
     return this.authService.isLoggedIn();
   }
 
+  isAdmin() {
+    return this.authService.isAdmin();
+  }
+
   getLoginLabel(){
     if(this.isLoggedIn()){
       return "Logout";

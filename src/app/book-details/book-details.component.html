@@ -1,11 +1,22 @@
-
-<div class="ui grid" *ngIf="book">
-  <div class="twelve wide column">
-    <img class="ui large image"
+<div *ngIf="!book && !ratings.length" class="ui active dimmer">
+  <div class="ui large text loader">Daten werden geladen...</div>
+</div>
+<div class="ui centered grid" *ngIf="book">
+  <div class="three wide column">
+    <img class="ui medium image"
          *ngIf="book.images && book.images[0]"
          [src]="book.images[0].url">
+
   </div>
-  <div class="twelve wide column">
+  <div class="eleven wide column">
+    <button *ngIf="authService.isAdmin()" class="ui tiny red labeled icon button"
+            (click)="removeBook()">
+      <i class="remove icon"></i> Buch löschen
+    </button>
+    <button *ngIf="authService.isLoggedIn() && authService.isAdmin()" class="ui tiny yellow labeled icon button"
+       [routerLink]="['../../admin', book?.isbn]">
+      <i class="write icon"></i> Buch bearbeiten
+    </button>
     <h1 class="ui header">{{ book.title }}</h1>
     <h3 class="ui header">{{ book?.subtitle }}</h3>
     <div class="ui divider"></div>
@@ -18,7 +29,7 @@
       </div>
       <div class="six wide column">
         <h4 class="ui header">Preis</h4>
-        {{ book.price }}€
+        EUR {{ book.price }}
       </div>
       <div class="six wide column">
         <h4 class="ui header">ISBN</h4>
@@ -29,34 +40,56 @@
         {{ book?.published }}
       </div>
       <div class="six wide column">
-        <h4 class="ui header">Rating</h4>
+        <h4 class="ui header">Bewertung</h4>
         <i *ngFor="let r of getRating(book?.rating)" class="yellow star icon"></i>
       </div>
-      <div class="six wide column">
-        <button class="ui tiny red labeled icon button"
+      <div *ngIf="!authService.isAdmin()" class="six wide column">
+        <button class="ui tiny green labeled icon button"
                 (click)="addToCart()">
           <i class="add icon"></i> Zum Warenkorb hinzufügen
         </button>
       </div>
+      <div class="sixteen wide column">
+        <h3 class="ui header">Beschreibung</h3>
+        {{ book.description }}
+      </div>
+      <!--<div class="sixteen wide column">
+        <div class="ui small images">
+          <img *ngFor="let thumbnail of book?.images" [src]="thumbnail.url">
+        </div>
+      </div>-->
     </div>
   </div>
-  <div class="sixteen wide column">
-    <h3 class="ui header">Beschreibung</h3>
-    {{ book.description }}
+
   </div>
-  <div class="sixteen wide column">
-    <div class="ui small images">
-      <img *ngFor="let thumbnail of book?.images" [src]="thumbnail.url">
-    </div>
+
+<div class="ui centered aligned vertically divided grid">
+<div class="ui four wide column divided grid">
+  <div *ngIf="authService.isLoggedIn() && !authService.isAdmin()" class="ui row">
+
+      <button class="ui tiny blue labeled icon button"
+              (click)="addRecommendation()">
+        <i class="add icon"></i> Eine Bewertung verfassen
+      </button>
+
+  </div>
+  <div class="ui row">
+
+      <div class="ui centered vertically divided grid">
+        <div *ngFor="let rating of ratings" class="ui horizontally divided two column grid row">
+          <div class="ui column">
+            <h3>{{ rating.user.firstName}}</h3>
+          </div>
+          <div class="ui column">
+            <i *ngFor="let r of getRating(rating.rating)" class="ui yellow star icon"></i>
+            <p>{{ rating.comment}}</p>
+          </div>
+        </div>
+      </div>
+
   </div>
 </div>
+  <div class="ten wide column"></div>
+</div>
 
-<button *ngIf="authService.isLoggedIn()" class="ui tiny red labeled icon button"
-        (click)="removeBook()">
-  <i class="remove icon"></i> Buch löschen
-</button>
-<a *ngIf="authService.isLoggedIn()" class="ui tiny yellow labeled icon button"
-   [routerLink]="['../../admin', book?.isbn]">
-  <i class="write icon"></i> Buch bearbeiten
-</a>
-
+<bs-cart-alert *ngIf="alert == true" class="bs-cart-alert"></bs-cart-alert>

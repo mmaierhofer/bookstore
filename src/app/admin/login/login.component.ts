@@ -43,6 +43,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  isAdmin() {
+    return this.authService.isAdmin();
+  }
+
 
   isLoggedIn(){
     return this.authService.isLoggedIn();

@@ -23,25 +23,29 @@ export class AuthService {
   }
 
   public setLocalStorage(token: string) {
-    console.log("Storing token");
-    console.log(token);
     const decodedToken = decode(token);
-    console.log(decodedToken);
-    console.log(decodedToken.user.id);
     localStorage.setItem('token', token);
     localStorage.setItem('userId', decodedToken.user.id);
-    //this.setCurrentUserId();
+    localStorage.setItem('roleId', decodedToken.user.role_id);
   }
 
   logout() {
     this.http.post(`${this.api}/logout`, {});
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("roleId");
     console.log("logged out");
   }
 
   public isLoggedIn() {
     return !isNullOrUndefined(localStorage.getItem("token"));
+  }
+
+  public isAdmin() {
+    if(localStorage.getItem('roleId') == '1') {
+      return true;
+    }
+    return false;
   }
 
   isLoggedOut() {

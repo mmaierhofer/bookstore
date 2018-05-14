@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../shared/authentication.service";
 import {BookStoreService} from "../shared/book-store.service";
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import {Rating} from "../shared/rating";
 @Component({
   selector: 'bs-rating',
   templateUrl: './rating.component.html',
@@ -12,7 +13,8 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 })
 export class RatingComponent implements OnInit {
 
-    book: Book = BookFactory.empty();
+    book : Book = BookFactory.empty();
+    rating = Rating;
     ratingForm: FormGroup;
 
   constructor(private fb: FormBuilder,
@@ -25,26 +27,28 @@ export class RatingComponent implements OnInit {
       const params = this.route.snapshot.params;
       this.bs.getSingle(params['isbn'])
           .subscribe(b => this.book = b);
+
+      this.ratingForm = this.fb.group({
+          comment: this.book.ratings['comment'],
+          rating: this.book.ratings['rating']
+      });
   }
 
   submitForm() {
-        // filter empty values
 
 
+        let body = '{' +
+            '"user_id" : '+ this.authService.getCurrentUserId() +',' +
+            '"book_id" : '+ this.book.id +',' +
+            '"comment" : "'+ this.ratingForm.value.comment +'",' +
+            '"rating" : "'+ this.ratingForm.value.rating +'"' +
+            '}';
 
+      console.log(body);
 
-        const book: Book = BookFactory.fromObject(this.ratingForm.value);
-        //just copy the rating and authors
-        book.rating = this.book.rating;
-        book.authors = this.book.authors;
-
-
-            book.user_id = 1;// jsut for testing
-            this.bs.create(book).subscribe(res => {
-                this.book = BookFactory.empty();
-                this.ratingForm.reset(BookFactory.empty());
-            });
-
+        this.bs.createRating(JSON.parse(body)).subscribe(res => {
+            this.router.navigate(['../../books'], { relativeTo: this.route });
+        });
     }
 
 

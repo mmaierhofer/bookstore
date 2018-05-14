@@ -1,0 +1,44 @@
+
+<div class="ui centered vertically divided grid">
+  <div *ngIf="!user.addresses || !orders" class="ui active dimmer">
+    <div class="ui large text loader">Daten werden geladen...</div>
+  </div>
+  <div class="row">
+    <div *ngIf="user" class="six wide column">
+      <h4>{{user?.firstName}} {{user?.lastName}}</h4>
+      <p>{{user?.email}}</p>
+      <div class="">
+        <div><p>{{user?.addresses?.country}}</p></div>
+        <div><p>{{user?.addresses?.city}} {{user?.addresses?.zip}}</p></div>
+        <div><p>{{user?.addresses?.street}} {{user?.addresses?.number}}</p></div>
+      </div>
+    </div>
+    <div class="four wide column">
+      <button (click)="logout()" class="red ui button">
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="ui grid">
+
+    </div>
+<div *ngIf="!authService.isAdmin()" class="ui centered vertically divided grid">
+  <h3>
+    Ihre bereits getätigten Bestellungen
+  </h3>
+  <div *ngFor="let order of orders?.reverse()" class="row ui vertically divided stretched grid">
+    <div class="six wide column">
+    <p *ngFor="let book of order.books">{{book.title}}</p>
+    </div>
+    <div class="column">
+      <p class="column">{{order.created_at | date:'dd.MM.yyyy'}}</p>
+      <p class="column">EUR {{order.brutto}}</p>
+    </div>
+
+
+  </div>
+</div>
+</div>
+</div>

@@ -4,6 +4,7 @@ import {BookStoreService} from "../shared/book-store.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BookFactory} from "../shared/book-factory";
 import {AuthService} from "../shared/authentication.service";
+import {Rating} from "../shared/rating";
 
 @Component({
   selector: 'bs-book-details',
@@ -12,6 +13,9 @@ import {AuthService} from "../shared/authentication.service";
 })
 export class BookDetailsComponent implements OnInit {
   book: Book = BookFactory.empty();
+  ratings = [];
+  full = [];
+  alert = false;
 
   constructor(
     private bs: BookStoreService,
@@ -23,19 +27,27 @@ export class BookDetailsComponent implements OnInit {
 
   ngOnInit() {
     const params = this.route.snapshot.params;
-    this.bs.getSingle(params['isbn'])
-      .subscribe(b => this.book = b);
+    this.bs.getSingleWithRating(params['isbn'])
+      .subscribe(r => this.book = r['book']);
+      this.bs.getSingleWithRating(params['isbn'])
+          .subscribe(r => this.ratings = r['ratings']);
+
   }
 
   getRating(num: number) {
     return new Array(num);
   }
 
+
   removeBook() {
     if (confirm('Buch wirklich löschen?')) {
       this.bs.remove(this.book.isbn)
         .subscribe(res => this.router.navigate(['../'], { relativeTo: this.route }));
     }
+  }
+
+  addRecommendation() {
+      this.router.navigate(['../../rating/'+this.book.isbn], { relativeTo: this.route });
   }
 
   addToCart() {
@@ -48,7 +60,9 @@ export class BookDetailsComponent implements OnInit {
         currentCartItems = currentCartItems.substr(0,currentCartItems.length-1);
         currentCartItems += ","+JSON.stringify(this.book)+"]";
     }
-    console.log(currentCartItems);
-      localStorage.setItem("currentCartItems",currentCartItems);
+
+    localStorage.setItem("currentCartItems",currentCartItems);
+
+    this.alert = true;
   }
 }

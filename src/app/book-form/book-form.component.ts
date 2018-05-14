@@ -1,11 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-
+import {AuthService} from "../shared/authentication.service";
 import { BookFormErrorMessages } from './book-form-error-messages';
 import {BookFactory} from "../shared/book-factory";
 import {BookStoreService} from "../shared/book-store.service";
 import {Book} from "../shared/book";
+import {Author} from "../shared/author";
 
 @Component({
   selector: 'bs-book-form',
@@ -17,9 +18,9 @@ export class BookFormComponent implements OnInit {
   errors: { [key: string]: string } = {};
   isUpdatingBook = false;
   thumbnails: FormArray;
-
+  authors : FormArray;
   constructor(private fb: FormBuilder, private bs: BookStoreService,
-              private route: ActivatedRoute, private router: Router) { }
+              private route: ActivatedRoute, private router: Router,private authService: AuthService) { }
 
   ngOnInit() {
     const isbn = this.route.snapshot.params['isbn'];
@@ -35,6 +36,7 @@ export class BookFormComponent implements OnInit {
 
   initBook() {
     this.buildThumbnailsArray();
+    this.buildAuthorsArray();
 
     this.myForm = this.fb.group({
       id: this.book.id,
@@ -44,7 +46,7 @@ export class BookFormComponent implements OnInit {
         Validators.required
       ]],
       description: this.book.description,
-      authors: this.book.authors,
+      authors: this.authors,
       price:  this.book.price,
       thumbnails: this.thumbnails,
       published: new Date(this.book.published)
@@ -64,6 +66,19 @@ export class BookFormComponent implements OnInit {
     );
   }
 
+  buildAuthorsArray() {
+      this.authors = this.fb.array(
+          this.book.authors.map(
+              t => this.fb.group({
+                  id: this.fb.control(t.id),
+                  firstName: this.fb.control(t.firstName),
+                  lastName: this.fb.control(t.lastName)
+              })
+          )
+      );
+      if(!this.authors.length) this.addAuthorControl();
+  }
+
   addThumbnailControl() {
     this.thumbnails.push(this.fb.group({ url: null, title: null }));
   }
@@ -71,6 +86,14 @@ export class BookFormComponent implements OnInit {
   removeThumbnailControl(index) {
     this.thumbnails.removeAt(index);
   }
+
+    addAuthorControl() {
+        this.authors.push(this.fb.group({ firstName: null, lastName: null }));
+    }
+
+    removeAuthorControl(index) {
+        this.authors.removeAt(index);
+    }
 
   submitForm() {
     // filter empty values
@@ -81,7 +104,7 @@ export class BookFormComponent implements OnInit {
     const book: Book = BookFactory.fromObject(this.myForm.value);
     //just copy the rating and authors
     book.rating = this.book.rating;
-    book.authors = this.book.authors;
+
 
     if (this.isUpdatingBook) {
       console.log(book);
@@ -89,10 +112,11 @@ export class BookFormComponent implements OnInit {
         this.router.navigate(['../../books', book.isbn], { relativeTo: this.route });
       });
     } else {
-      book.user_id = 1;// jsut for testing
+      book.user_id = this.authService.getCurrentUserId();
       this.bs.create(book).subscribe(res => {
         this.book = BookFactory.empty();
         this.myForm.reset(BookFactory.empty());
+          this.router.navigate(['../books'], { relativeTo: this.route });
       });
     }
   }

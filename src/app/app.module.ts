@@ -21,6 +21,8 @@ import {JwtInterceptorService} from "./shared/jwt-interceptor.service";
 import { CartComponent } from './cart/cart.component';
 import { CartItemComponent } from './cart-item/cart-item.component';
 import { RatingComponent } from './rating/rating.component';
+import { ProfileComponent } from './profile/profile.component';
+import { CartAlertComponent } from './book-details/cart-alert/cart-alert.component';
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import { RatingComponent } from './rating/rating.component';
     LoginComponent,
     CartComponent,
     CartItemComponent,
-    RatingComponent
+    RatingComponent,
+    ProfileComponent,
+    CartAlertComponent
   ],
   imports: [
     BrowserModule, AppRoutingModule, HttpClientModule,

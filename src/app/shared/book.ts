@@ -2,6 +2,8 @@ import { Image } from './image';
 export { Image } from './image';
 import { Author } from './author';
 export { Author } from './author';
+import { Rating } from './rating';
+export { Rating } from './rating';
 
 export class Book {
   constructor (
@@ -14,6 +16,7 @@ export class Book {
     public user_id: number,
     public subtitle?: string,
     public rating?: number,
+    public ratings?: Rating[],
     public images?: Image[],
     public description?: string
   ) {  }
