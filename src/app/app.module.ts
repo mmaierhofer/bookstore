@@ -36,7 +36,7 @@ import { CartAlertComponent } from './book-details/cart-alert/cart-alert.compone
     BookFormComponent,
     LoginComponent,
     CartComponent,
-    CartItemComponent,
+    //CartItemComponent,
     RatingComponent,
     ProfileComponent,
     CartAlertComponent

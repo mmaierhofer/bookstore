@@ -1,15 +1,15 @@
+<div *ngIf="books.length" class="ui middle aligned selection">
+  <p>Gesamtpreis (inkl. MWST): EUR {{price}}</p>
+
+  <button *ngIf="authService.isLoggedIn()" class="ui tiny green labeled icon button" (click)="order()">
+    <i class="write icon"></i> Bestellen
+  </button>
+</div>
 <div class="ui middle aligned selection divided list">
   <a *ngFor="let book of books" class="item bs-book-list-item" [book]="book"
-     [routerLink]="book.isbn"></a>
+     [routerLink]="['../books/', book.isbn]"></a>
   <div *ngIf="!books" class="ui active dimmer">
     <div class="ui large text loader">Daten werden geladen...</div>
   </div>
   <p *ngIf="!books.length">In Ihrem Warenkorb befinden sich keine Bücher.</p>
-</div>
-<div *ngIf="books.length" class="ui middle aligned selection">
-  <p>Gesamtpreis (inkl. MWST): EUR {{price}}</p>
-
-<button *ngIf="authService.isLoggedIn()" class="ui tiny green labeled icon button" (click)="order()">
-  <i class="write icon"></i> Bestellen
-</button>
 </div>

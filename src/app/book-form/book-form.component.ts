@@ -71,8 +71,8 @@ export class BookFormComponent implements OnInit {
           this.book.authors.map(
               t => this.fb.group({
                   id: this.fb.control(t.id),
-                  firstName: this.fb.control(t.firstName),
-                  lastName: this.fb.control(t.lastName)
+                  firstName: this.fb.control(t.firstName, [Validators.required]),
+                  lastName: this.fb.control(t.lastName, [Validators.required])
               })
           )
       );

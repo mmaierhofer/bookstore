@@ -30,7 +30,9 @@ export class RatingComponent implements OnInit {
 
       this.ratingForm = this.fb.group({
           comment: this.book.ratings['comment'],
-          rating: this.book.ratings['rating']
+          rating: [this.book.ratings['rating'],[
+              Validators.required
+          ]]
       });
   }
 
